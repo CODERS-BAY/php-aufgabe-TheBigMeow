@@ -1,0 +1,68 @@
+SET NAMES utf8;
+SET time_zone = '+00:00';
+SET foreign_key_checks = 0;
+SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
+
+DROP DATABASE IF EXISTS `default`;
+CREATE DATABASE `default` /*!40100 DEFAULT CHARACTER SET latin1 */;
+USE `default`;
+
+DROP TABLE IF EXISTS `employee`;
+CREATE TABLE `employee` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(255) NOT NULL,
+  `firstname` varchar(255) NOT NULL,
+  `lastname` varchar(255) NOT NULL,
+  `roleid` int(11) DEFAULT NULL,
+  `image` varchar(255) DEFAULT NULL,
+  `teamid` int(11) DEFAULT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `roleid` (`roleid`),
+  KEY `teamid` (`teamid`),
+  CONSTRAINT `employee_ibfk_1` FOREIGN KEY (`roleid`) REFERENCES `roles` (`id`),
+  CONSTRAINT `employee_ibfk_2` FOREIGN KEY (`teamid`) REFERENCES `teams` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `employee` (`id`, `username`, `firstname`, `lastname`, `roleid`, `image`, `teamid`, `email`, `password`) VALUES
+(2,	'musterfrau',	'Maxine',	'Musterfrau',	3,	NULL,	NULL,	'musterfrau@beispiel.at',	'$2y$10$RMk5PHvDtKp3Hdvx4kBHSOqJhwNCjXKjC.mvIB0elDO4/Djrg0ALe'),
+(4,	'leiter',	'Heinrich',	'Helferlein',	2,	NULL,	1,	'heinrich@helferlein.at',	'$2y$10$AvLQkatilfZjvVU4yNK3JuCSF1sHZ548H4Se8PQzuYroKsNyiP0fK'),
+(5,	'admin',	'Henrietta',	'Herscher',	1,	NULL,	NULL,	'hh@hallo.xyz',	'$2y$10$Thv4DSkY8gY3tRGiK93souPain160OEKUywRS.SAsM1xV5kz570OC');
+
+DROP TABLE IF EXISTS `messages`;
+CREATE TABLE `messages` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `employeeid` int(11) NOT NULL,
+  `teamid` int(11) NOT NULL,
+  `message` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `employeeid` (`employeeid`),
+  KEY `teamid` (`teamid`),
+  CONSTRAINT `messages_ibfk_1` FOREIGN KEY (`employeeid`) REFERENCES `employee` (`id`),
+  CONSTRAINT `messages_ibfk_2` FOREIGN KEY (`employeeid`) REFERENCES `employee` (`id`),
+  CONSTRAINT `messages_ibfk_3` FOREIGN KEY (`teamid`) REFERENCES `teams` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+DROP TABLE IF EXISTS `roles`;
+CREATE TABLE `roles` (
+  `id` int(11) NOT NULL,
+  `role` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `roles` (`id`, `role`) VALUES
+(1,	'Admin'),
+(2,	'Teamleiter'),
+(3,	'Mitarbeiter');
+
+DROP TABLE IF EXISTS `teams`;
+CREATE TABLE `teams` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `team` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `teams` (`id`, `team`) VALUES
+(1,	'Testteam');
